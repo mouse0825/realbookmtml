@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>註冊帳號</title>
+<style>
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f5f5f5;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.register-container {
+  background-color: white;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  width: 400px;
+}
+
+.register-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.register-header h1 {
+  color: #003366;
+  margin: 0;
+  font-size: 24px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  color: #333;
+  font-weight: bold;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-size: 16px;
+}
+
+.form-group input:focus {
+  border-color: #003366;
+  outline: none;
+  box-shadow: 0 0 5px rgba(0, 51, 102, 0.2);
+}
+
+.register-submit {
+  width: 100%;
+  padding: 12px;
+  background-color: #003366;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  transition: background-color 0.3s;
+}
+
+.register-submit:hover {
+  background-color: #004480;
+}
+
+.login-link {
+  text-align: center;
+  margin-top: 20px;
+  color: #666;
+}
+
+.login-link a {
+  color: #003366;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.login-link a:hover {
+  text-decoration: underline;
+}
+
+.error-message {
+  color: #ff3333;
+  font-size: 14px;
+  margin-top: 5px;
+  display: none;
+}
+
+/* 深色模式樣式 */
+body.dark-mode {
+  background-color: #1a1a1a;
+}
+
+body.dark-mode .register-container {
+  background-color: #2d2d2d;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+body.dark-mode .register-header h1 {
+  color: #ffffff;
+}
+
+body.dark-mode .form-group label {
+  color: #ffffff;
+}
+
+body.dark-mode .form-group input {
+  background-color: #1a1a1a;
+  border-color: #404040;
+  color: #ffffff;
+}
+
+body.dark-mode .form-group input:focus {
+  border-color: #66b3ff;
+  box-shadow: 0 0 5px rgba(102, 179, 255, 0.2);
+}
+
+body.dark-mode .login-link {
+  color: #999;
+}
+
+body.dark-mode .login-link a {
+  color: #66b3ff;
+}
+
+/* 主題切換按鈕 */
+.theme-toggle {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #003366;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: 0.3s;
+  border: none;
+}
+
+body.dark-mode .theme-toggle {
+  background-color: #404040;
+}
+
+/* 密碼強度指示器 */
+.password-strength {
+  margin-top: 5px;
+  height: 5px;
+  border-radius: 2px;
+  background-color: #ddd;
+  overflow: hidden;
+}
+
+.password-strength-bar {
+  height: 100%;
+  width: 0;
+  transition: width 0.3s, background-color 0.3s;
+}
+
+.strength-weak {
+  background-color: #ff4444;
+  width: 33.33%;
+}
+
+.strength-medium {
+  background-color: #ffbb33;
+  width: 66.66%;
+}
+
+.strength-strong {
+  background-color: #00C851;
+  width: 100%;
+}
+
+body.dark-mode .password-strength {
+  background-color: #404040;
+}
+
+/* 成功提示樣式 */
+.success-message {
+  display: none;
+  background-color: #4CAF50;
+  color: white;
+  padding: 15px;
+  border-radius: 4px;
+  text-align: center;
+  margin-bottom: 20px;
+  animation: fadeIn 0.5s;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+body.dark-mode .success-message {
+  background-color: #2e7d32;
+}
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+<button class="theme-toggle" onclick="toggleTheme()">
+  <i class="fas fa-moon" id="themeIcon"></i>
+</button>
+
+<div class="register-container">
+  <div class="success-message" id="successMessage">
+    註冊成功！即將跳轉到登入頁面...
+  </div>
+  <div class="register-header">
+    <h1>註冊帳號</h1>
+  </div>
+  
+  <form id="registerForm" onsubmit="handleRegister(event)">
+    <div class="form-group">
+      <label for="username">使用者名稱</label>
+      <input type="text" id="username" required minlength="3" maxlength="20">
+      <div class="error-message" id="usernameError"></div>
+    </div>
+    
+    <div class="form-group">
+      <label for="email">電子郵件</label>
+      <input type="email" id="email" required>
+      <div class="error-message" id="emailError"></div>
+    </div>
+    
+    <div class="form-group">
+      <label for="password">密碼</label>
+      <input type="password" id="password" required minlength="8" oninput="checkPasswordStrength(this.value)">
+      <div class="password-strength">
+        <div class="password-strength-bar" id="strengthBar"></div>
+      </div>
+      <div class="error-message" id="passwordError"></div>
+    </div>
+    
+    <div class="form-group">
+      <label for="confirmPassword">確認密碼</label>
+      <input type="password" id="confirmPassword" required>
+      <div class="error-message" id="confirmPasswordError"></div>
+    </div>
+    
+    <button type="submit" class="register-submit">註冊</button>
+  </form>
+  
+  <!--div class="login-link">
+    已經有帳號了？<a href="javascript:void(0)" onclick="window.close()">返回登入</a>
+  </div>
+</div-->
+
+<script>
+function handleRegister(event) {
+  event.preventDefault();
+  
+  const username = document.getElementById('username').value;
+  const email = document.getElementById('email').value;
+  const password = document.getElementById('password').value;
+  const confirmPassword = document.getElementById('confirmPassword').value;
+  const captcha = document.getElementById('captcha').value;
+  
+  // 重置錯誤信息
+  document.querySelectorAll('.error-message').forEach(el => el.style.display = 'none');
+  
+  // 驗證用戶名
+  if (username.length < 3) {
+    showError('usernameError', '用戶名至少需要3個字符');
+    return;
+  }
+  
+  // 驗證郵箱
+  if (!isValidEmail(email)) {
+    showError('emailError', '請輸入有效的電子郵件地址');
+    return;
+  }
+  
+  // 驗證密碼
+  if (!isStrongPassword(password)) {
+    showError('passwordError', '密碼必須包含大小寫字母、數字和特殊字符，且至少8位');
+    return;
+  }
+  
+  // 驗證確認密碼
+  if (password !== confirmPassword) {
+    showError('confirmPasswordError', '兩次輸入的密碼不匹配');
+    return;
+  }
+  
+  // 驗證驗證碼
+  if (!validateCaptcha(captcha)) {
+    alert('驗證碼錯誤，請重新輸入');
+    refreshCaptcha();
+    document.getElementById('captcha').value = '';
+    return;
+  }
+  
+  // 隱藏註冊表單
+  document.getElementById('registerForm').style.display = 'none';
+  
+  // 顯示成功信息
+  const successMessage = document.getElementById('successMessage');
+  successMessage.style.display = 'block';
+  
+  // 3秒後跳轉到登入頁面
+  setTimeout(() => {
+    window.location.href = 'Home.html';
+  }, 3000);
+}
+
+function showError(elementId, message) {
+  const errorElement = document.getElementById(elementId);
+  errorElement.textContent = message;
+  errorElement.style.display = 'block';
+}
+
+function isValidEmail(email) {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+}
+
+function isStrongPassword(password) {
+  const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+  return strongPasswordRegex.test(password);
+}
+
+function checkPasswordStrength(password) {
+  const strengthBar = document.getElementById('strengthBar');
+  let strength = 0;
+  
+  // 檢查長度
+  if (password.length >= 8) strength++;
+  // 檢查是否包含數字和字母
+  if (/[0-9]/.test(password) && /[a-zA-Z]/.test(password)) strength++;
+  // 檢查是否包含特殊字符
+  if (/[^A-Za-z0-9]/.test(password)) strength++;
+  
+  strengthBar.className = 'password-strength-bar';
+  if (strength === 1) {
+    strengthBar.classList.add('strength-weak');
+  } else if (strength === 2) {
+    strengthBar.classList.add('strength-medium');
+  } else if (strength === 3) {
+    strengthBar.classList.add('strength-strong');
+  }
+}
+
+function toggleTheme() {
+  document.body.classList.toggle('dark-mode');
+  const themeIcon = document.getElementById('themeIcon');
+  if (document.body.classList.contains('dark-mode')) {
+    themeIcon.classList.remove('fa-moon');
+    themeIcon.classList.add('fa-sun');
+    localStorage.setItem('theme', 'dark');
+  } else {
+    themeIcon.classList.remove('fa-sun');
+    themeIcon.classList.add('fa-moon');
+    localStorage.setItem('theme', 'light');
+  }
+}
+
+// 初始化主題
+document.addEventListener('DOMContentLoaded', () => {
+  const savedTheme = localStorage.getItem('theme');
+  if (savedTheme === 'dark') {
+    document.body.classList.add('dark-mode');
+    const themeIcon = document.getElementById('themeIcon');
+    themeIcon.classList.remove('fa-moon');
+    themeIcon.classList.add('fa-sun');
+  }
+});
+</script>
+</body>
+</html> 

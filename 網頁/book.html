@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>書籍詳情</title>
+<style>
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.header {
+  background-color: #003366;
+  padding: 10px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.container {
+  width: 1200px;
+  margin: 0 auto;
+}
+
+.logo {
+  color: white;
+  font-size: 24px;
+  text-decoration: none;
+}
+
+/* 登入按鈕樣式 */
+.login-btn {
+  color: white;
+  text-decoration: none;
+  padding: 8px 16px;
+  border: 2px solid white;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  margin-right: 20px;
+}
+
+.login-btn:hover {
+  background-color: white;
+  color: #003366;
+}
+
+/* 書籍詳情樣式 */
+.book-detail {
+  padding: 40px 0;
+}
+
+.book-content {
+  display: flex;
+  gap: 40px;
+}
+
+.book-image {
+  position: relative;
+  flex: 0 0 300px;
+  height: 400px;
+  cursor: zoom-in;
+}
+
+.book-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transition: transform 0.3s ease;
+}
+
+.book-info {
+  flex: 1;
+}
+
+.book-title {
+  font-size: 28px;
+  margin: 0 0 20px;
+  color: #333;
+}
+
+.book-meta {
+  margin-bottom: 30px;
+}
+
+.book-meta p {
+  margin: 10px 0;
+  color: #666;
+}
+
+.book-meta span {
+  font-weight: bold;
+  color: #333;
+}
+
+.book-description {
+  line-height: 1.6;
+  color: #444;
+}
+
+.action-buttons {
+  margin-top: 30px;
+  display: flex;
+  gap: 15px;
+}
+
+.action-button {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  transition: background-color 0.3s;
+}
+
+.read-button {
+  background-color: #ff6600;
+  color: white;
+}
+
+.read-button:hover {
+  background-color: #ff8533;
+}
+
+.collect-button {
+  background-color: #003366;
+  color: white;
+}
+
+.collect-button:hover {
+  background-color: #004480;
+}
+
+/* 深色模式樣式 */
+body.dark-mode {
+  background-color: #1a1a1a;
+  color: #ffffff;
+}
+
+body.dark-mode .header {
+  background-color: #2d2d2d;
+}
+
+body.dark-mode .book-title {
+  color: #ffffff;
+}
+
+body.dark-mode .book-meta p {
+  color: #999;
+}
+
+body.dark-mode .book-meta span {
+  color: #ffffff;
+}
+
+body.dark-mode .book-description {
+  color: #cccccc;
+}
+
+body.dark-mode .login-btn {
+  border-color: #ffffff;
+}
+
+body.dark-mode .login-btn:hover {
+  background-color: #ffffff;
+  color: #2d2d2d;
+}
+
+/* 登入彈窗樣式 */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 2000;
+}
+
+.modal-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 300px;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.close {
+  cursor: pointer;
+  font-size: 24px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.login-submit {
+  width: 100%;
+  padding: 10px;
+  background-color: #003366;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.login-submit:hover {
+  background-color: #004480;
+}
+
+/* 註冊連結樣式 */
+.register-link {
+  text-align: center;
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid #ddd;
+  font-size: 0.9em;
+}
+
+.register-link a {
+  color: #003366;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.register-link a:hover {
+  text-decoration: underline;
+}
+
+/* 找回密碼連結樣式 */
+.forgot-password-link {
+  text-align: center;
+  margin-top: 10px;
+  font-size: 0.9em;
+}
+
+.forgot-password-link a {
+  color: #003366;
+  text-decoration: none;
+}
+
+.forgot-password-link a:hover {
+  text-decoration: underline;
+}
+
+/* 深色模式的登入相關樣式 */
+body.dark-mode .modal-content {
+  background-color: #2d2d2d;
+  color: white;
+}
+
+body.dark-mode .form-group input {
+  background-color: #1a1a1a;
+  border-color: #404040;
+  color: white;
+}
+
+body.dark-mode .register-link {
+  border-top-color: #404040;
+}
+
+body.dark-mode .register-link a,
+body.dark-mode .forgot-password-link a {
+  color: #66b3ff;
+}
+
+/* 主題切換按鈕 */
+.theme-toggle {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #003366;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: 0.3s;
+  border: none;
+  z-index: 1000;
+}
+
+body.dark-mode .theme-toggle {
+  background-color: #404040;
+}
+
+/* 側邊選單樣式 */
+.sidebar {
+  position: fixed;
+  left: -250px;
+  top: 0;
+  height: 100%;
+  width: 250px;
+  background-color: #003366;
+  padding-top: 60px;
+  transition: 0.3s;
+  z-index: 1000;
+}
+
+.sidebar.active {
+  left: 0;
+}
+
+.sidebar-menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar-menu li {
+  padding: 15px 25px;
+  color: white;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.sidebar-menu li:hover {
+  background-color: #004480;
+}
+
+.sidebar-menu i {
+  margin-right: 10px;
+}
+
+/* 子選單樣式 */
+.submenu {
+  list-style: none;
+  padding-left: 25px;
+  margin-top: 10px;
+  display: none;
+}
+
+.submenu li {
+  padding: 8px 15px;
+  font-size: 0.9em;
+}
+
+.submenu li:hover {
+  background-color: #004480;
+}
+
+/* 漢堡選單按鈕 */
+.menu-toggle {
+  position: fixed;
+  left: 20px;
+  top: 20px;
+  z-index: 1001;
+  cursor: pointer;
+  color: white;
+  font-size: 24px;
+}
+
+/* 遮罩層 */
+.overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+}
+
+.overlay.active {
+  display: block;
+}
+
+/* 主要內容區域調整 */
+.main-content {
+  margin-left: 0;
+  transition: 0.3s;
+}
+
+.main-content.shifted {
+  margin-left: 250px;
+}
+
+body.dark-mode .menu-toggle {
+  color: #ffffff;
+}
+
+body.dark-mode .sidebar {
+  background-color: #2d2d2d;
+}
+
+/* 圖片檢視相關樣式 */
+.book-image {
+  position: relative;
+  flex: 0 0 300px;
+  height: 400px;
+  cursor: zoom-in;
+}
+
+.book-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transition: transform 0.3s ease;
+}
+
+/* 放大鏡圖標 */
+.zoom-icon {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  width: 30px;
+  height: 30px;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.book-image:hover .zoom-icon {
+  opacity: 1;
+}
+
+/* 圖片檢視器 */
+.image-viewer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.9);
+  z-index: 2001;
+  display: none;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.image-viewer.active {
+  display: flex;
+  opacity: 1;
+}
+
+.viewer-content {
+  position: relative;
+  max-width: 90%;
+  max-height: 90%;
+  margin: auto;
+}
+
+.viewer-image {
+  max-width: 100%;
+  max-height: 90vh;
+  object-fit: contain;
+}
+
+.viewer-close {
+  position: absolute;
+  top: -40px;
+  right: 0;
+  color: white;
+  font-size: 30px;
+  cursor: pointer;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+  border: none;
+  transition: transform 0.3s;
+}
+
+.viewer-close:hover {
+  transform: rotate(90deg);
+}
+
+/* 深色模式適配 */
+body.dark-mode .zoom-icon {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* 評分系統樣式 */
+.rating-section {
+  margin: 30px 0;
+}
+
+.rating-stars {
+  display: flex;
+  gap: 5px;
+}
+
+.star {
+  color: #ffd700;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.rating-count {
+  color: #666;
+  margin-left: 10px;
+}
+
+/* 讀書心得樣式 */
+.book-notes {
+  margin-top: 40px;
+  padding-top: 30px;
+  border-top: 1px solid #ddd;
+}
+
+.notes-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.add-note-btn {
+  padding: 8px 16px;
+  background-color: #003366;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.note-item {
+  background-color: #f5f5f5;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.note-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.note-author {
+  font-weight: bold;
+}
+
+.note-date {
+  color: #666;
+}
+
+.note-content {
+  line-height: 1.6;
+}
+
+/* 相關書籍推薦樣式 */
+.related-books {
+  margin-top: 40px;
+  padding-top: 30px;
+  border-top: 1px solid #ddd;
+}
+
+.related-books-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.related-book-item {
+  text-align: center;
+}
+
+.related-book-cover {
+  width: 150px;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  transition: transform 0.3s;
+}
+
+.related-book-cover:hover {
+  transform: translateY(-5px);
+}
+
+.related-book-title {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.related-book-author {
+  color: #666;
+  font-size: 0.9em;
+}
+
+/* 深色模式適配 */
+body.dark-mode .note-item {
+  background-color: #333;
+}
+
+body.dark-mode .note-date {
+  color: #999;
+}
+
+body.dark-mode .related-book-author {
+  color: #999;
+}
+
+body.dark-mode .rating-count {
+  color: #999;
+}
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+<div class="header">
+  <div class="container">
+    <a href="Home.html" class="logo">主頁</a>
+  </div>
+  <a href="#" class="login-btn" onclick="showLoginModal()">登入</a>
+</div>
+
+<div class="menu-toggle" onclick="toggleSidebar()">
+  <i class="fas fa-bars"></i>
+</div>
+
+<div class="overlay" onclick="toggleSidebar()"></div>
+
+<div class="sidebar">
+  <ul class="sidebar-menu">
+    <li onclick="location.href='Home.html'">
+      <i class="fas fa-home"></i>首頁
+    </li>
+    <li onclick="location.href='myself.html'">
+      <i class="fas fa-book"></i>個人書庫
+    </li>
+    <li onclick="showBookCategories()" class="active">
+      <i class="fas fa-list"></i>書籍分類
+      <ul class="submenu" id="bookCategories">
+        <li><i class="fas fa-angle-right"></i>文學小說</li>
+        <li><i class="fas fa-angle-right"></i>科技資訊</li>
+        <li><i class="fas fa-angle-right"></i>藝術設計</li>
+        <li><i class="fas fa-angle-right"></i>商業理財</li>
+        <li><i class="fas fa-angle-right"></i>心理勵志</li>
+      </ul>
+    </li>
+    <li onclick="location.href='search.html'">
+      <i class="fas fa-search"></i>進階搜尋
+    </li>
+    <li onclick="location.href='search.html'">
+      <i class="fas fa-user"></i>個人資料
+    </li>
+    <li onclick="toggleTheme()">
+      <i class="fas fa-moon" id="themeIcon"></i>深色模式
+    </li>
+    <li onclick="showHelp()">
+      <i class="fas fa-question-circle"></i>問題與幫助
+    </li>
+  </ul>
+</div>
+
+<div class="container">
+  <div class="book-detail">
+    <div class="book-content">
+      <div class="book-image">
+        <img src="https://i.imgur.com/yCFAW6y.jpg" alt="書籍封面" onclick="openImageViewer(this)">
+        <div class="zoom-icon">
+          <i class="fas fa-search-plus"></i>
+        </div>
+      </div>
+      <div class="book-info">
+        <h1 class="book-title">貓咪的日常生活</h1>
+        <div class="book-meta">
+          <p>作者：<span>貓咪作家</span></p>
+          <p>出版社：<span>寵物出版社</span></p>
+          <p>出版日期：<span>2023年10月</span></p>
+          <p>ISBN：<span>9789573317776</span></p>
+          <p>分類：<span>寵物 / 生活</span></p>
+        </div>
+        <div class="book-description">
+          <h2>內容簡介</h2>
+          <p>這是一本關於貓咪日常生活的有趣故事集。透過作者細膩的觀察，記錄了貓咪們的各種趣事，包括他們的睡眠習慣、飲食偏好、玩耍方式等。書中還包含了許多實用的養貓建議，是一本既有趣又實用的貓奴必讀書籍。</p>
+        </div>
+        <div class="action-buttons">
+          <button class="action-button collect-button" onclick="handleCollect()">加入收藏</button>
+        </div>
+        <div class="rating-section">
+          <h2>讀者評分</h2>
+          <div class="rating-stars">
+            <i class="fas fa-star star" data-rating="1"></i>
+            <i class="fas fa-star star" data-rating="2"></i>
+            <i class="fas fa-star star" data-rating="3"></i>
+            <i class="fas fa-star star" data-rating="4"></i>
+            <i class="fas fa-star star" data-rating="5"></i>
+            <span class="rating-count">(32 個評分)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 登入彈窗 -->
+<div id="loginModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>登入</h2>
+      <span class="close" onclick="closeLoginModal()">&times;</span>
+    </div>
+    <form id="loginForm" onsubmit="handleLogin(event)">
+      <div class="form-group">
+        <label for="username">帳號</label>
+        <input type="text" id="username" required>
+      </div>
+      <div class="form-group">
+        <label for="password">密碼</label>
+        <input type="password" id="password" required>
+      </div>
+      <button type="submit" class="login-submit">登入</button>
+    </form>
+    <div class="register-link">
+      還沒有帳號？<a href="register.html" target="_blank">立即註冊</a>
+    </div>
+    <div class="forgot-password-link">
+      <a href="forgot-password.html" target="_blank">忘記密碼？</a>
+    </div>
+  </div>
+</div>
+
+<!-- 圖片檢視器 -->
+<div class="image-viewer" id="imageViewer" onclick="closeImageViewer()">
+  <div class="viewer-content" onclick="event.stopPropagation()">
+    <button class="viewer-close" onclick="closeImageViewer()">
+      <i class="fas fa-times"></i>
+    </button>
+    <img class="viewer-image" src="" alt="書籍封面大圖">
+  </div>
+</div>
+
+<!-- 讀書心得區域 -->
+<div class="book-notes">
+  <div class="notes-header">
+    <h2>讀書心得</h2>
+    <button class="add-note-btn" onclick="showAddNoteForm()">
+      <i class="fas fa-plus"></i> 撰寫心得
+    </button>
+  </div>
+  <div class="notes-list">
+    <div class="note-item">
+      <div class="note-header">
+        <span class="note-author">王小明</span>
+        <span class="note-date">2023-12-03</span>
+      </div>
+      <div class="note-content">
+        這本書對於想要了解貓咪習性的人來說是一本非常好的入門書籍。作者以生動有趣的方式描述了貓咪的各種行為，讓人更容易理解如何與貓咪相處。強烈推薦給所有貓奴！
+      </div>
+    </div>
+    <div class="note-item">
+      <div class="note-header">
+        <span class="note-author">李小華</span>
+        <span class="note-date">2023-12-01</span>
+      </div>
+      <div class="note-content">
+        書中的照片都很精美，內容也很實用。特別喜歡作者分享的一些實際案例，讓我學到了很多照顧貓咪的技巧。
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 相關書籍推薦 -->
+<div class="related-books">
+  <h2>相關書籍推薦</h2>
+  <div class="related-books-list">
+    <div class="related-book-item">
+      <img src="https://i.imgur.com/example1.jpg" alt="相關書籍1" class="related-book-cover">
+      <div class="related-book-title">貓咪行為學</div>
+      <div class="related-book-author">張教授</div>
+    </div>
+    <div class="related-book-item">
+      <img src="https://i.imgur.com/example2.jpg" alt="相關書籍2" class="related-book-cover">
+      <div class="related-book-title">貓咪健康指南</div>
+      <div class="related-book-author">陳醫師</div>
+    </div>
+    <div class="related-book-item">
+      <img src="https://i.imgur.com/example3.jpg" alt="相關書籍3" class="related-book-cover">
+      <div class="related-book-title">貓咪攝影技巧</div>
+      <div class="related-book-author">林攝影師</div>
+    </div>
+  </div>
+</div>
+
+<script>
+// 登入相關函數
+function showLoginModal() {
+  document.getElementById('loginModal').style.display = 'block';
+}
+
+function closeLoginModal() {
+  document.getElementById('loginModal').style.display = 'none';
+}
+
+function handleLogin(event) {
+  event.preventDefault();
+  const username = document.getElementById('username').value;
+  const password = document.getElementById('password').value;
+  
+  // 這裡可以添加實際的登入邏輯
+  console.log('登入資訊:', { username, password });
+  
+  // 模擬登入成功
+  alert('登入成功！');
+  closeLoginModal();
+  
+  // 清空表單
+  event.target.reset();
+}
+
+// 點擊彈窗外部關閉彈窗
+window.onclick = function(event) {
+  const modal = document.getElementById('loginModal');
+  if (event.target === modal) {
+    closeLoginModal();
+  }
+}
+
+// 主題切換
+function toggleTheme() {
+  document.body.classList.toggle('dark-mode');
+  const themeIcon = document.getElementById('themeIcon');
+  if (document.body.classList.contains('dark-mode')) {
+    themeIcon.classList.remove('fa-moon');
+    themeIcon.classList.add('fa-sun');
+    localStorage.setItem('theme', 'dark');
+  } else {
+    themeIcon.classList.remove('fa-sun');
+    themeIcon.classList.add('fa-moon');
+    localStorage.setItem('theme', 'light');
+  }
+}
+
+// 書籍相關函數
+function handleRead() {
+  // 檢查是否已登入
+  // 這裡應該添加實際的登入狀態檢查邏輯
+  const isLoggedIn = false;
+  
+  if (!isLoggedIn) {
+    alert('請先登入再開始閱讀');
+    showLoginModal();
+    return;
+  }
+  
+  // 這裡添加閱讀功能的實現
+  alert('開始閱讀');
+}
+
+function handleCollect() {
+  // 檢查是否登入
+  // 這裡應該添加實際的登入狀態檢查邏輯
+  const isLoggedIn = false;
+  
+  if (!isLoggedIn) {
+    alert('請先登入再加入收藏');
+    showLoginModal();
+    return;
+  }
+  
+  // 這裡添加收藏功能的實現
+  alert('已加入收藏');
+}
+
+// 初始化主題
+document.addEventListener('DOMContentLoaded', () => {
+  const savedTheme = localStorage.getItem('theme');
+  if (savedTheme === 'dark') {
+    document.body.classList.add('dark-mode');
+    const themeIcon = document.getElementById('themeIcon');
+    themeIcon.classList.remove('fa-moon');
+    themeIcon.classList.add('fa-sun');
+  }
+});
+
+// 側邊選單相關函數
+function toggleSidebar() {
+  const sidebar = document.querySelector('.sidebar');
+  const overlay = document.querySelector('.overlay');
+  const mainContent = document.querySelector('.main-content');
+  
+  sidebar.classList.toggle('active');
+  overlay.classList.toggle('active');
+  mainContent.classList.toggle('shifted');
+}
+
+function showBookCategories() {
+  const submenu = document.getElementById('bookCategories');
+  submenu.style.display = submenu.style.display === 'block' ? 'none' : 'block';
+}
+
+function showHelp() {
+  // 顯示幫助信息
+  alert('如需協助，請聯繫我們的客服團隊。\n電子郵件：support@example.com\n服務時間：週一至週五 9:00-18:00');
+}
+
+// 初始化
+document.addEventListener('DOMContentLoaded', () => {
+  // ... existing code ...
+
+  // 添加 ESC 鍵關閉側邊選單
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      const sidebar = document.querySelector('.sidebar');
+      const overlay = document.querySelector('.overlay');
+      const mainContent = document.querySelector('.main-content');
+      
+      sidebar.classList.remove('active');
+      overlay.classList.remove('active');
+      mainContent.classList.remove('shifted');
+    }
+  });
+});
+
+// 圖片檢視相關函數
+function openImageViewer(img) {
+  const viewer = document.getElementById('imageViewer');
+  const viewerImage = viewer.querySelector('.viewer-image');
+  
+  // 獲取高解析度圖片網址（如果有的話）
+  const largeImageUrl = img.dataset.large || img.src;
+  viewerImage.src = largeImageUrl;
+  
+  // 顯示檢視器
+  viewer.classList.add('active');
+  document.body.style.overflow = 'hidden'; // 防止背景滾動
+}
+
+function closeImageViewer() {
+  const viewer = document.getElementById('imageViewer');
+  viewer.classList.remove('active');
+  document.body.style.overflow = ''; // 恢復背景滾動
+}
+
+// 添加 ESC 鍵關閉檢視器
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    closeImageViewer();
+  }
+});
+
+// 評分系統相關函數
+function handleRating(rating) {
+  // 檢查登入狀態
+  if (!isLoggedIn) {
+    alert('請先登入再評分');
+    showLoginModal();
+    return;
+  }
+  
+  // 更新星星顯示
+  const stars = document.querySelectorAll('.star');
+  stars.forEach((star, index) => {
+    if (index < rating) {
+      star.style.color = '#ffd700';
+    } else {
+      star.style.color = '#ddd';
+    }
+  });
+  
+  // 這裡可以添加將評分發送到服務器的邏輯
+  console.log('用戶評分:', rating);
+}
+
+// 初始化評分系統
+document.querySelectorAll('.star').forEach(star => {
+  star.addEventListener('click', () => {
+    handleRating(star.dataset.rating);
+  });
+  
+  star.addEventListener('mouseover', () => {
+    const rating = star.dataset.rating;
+    const stars = document.querySelectorAll('.star');
+    stars.forEach((s, index) => {
+      if (index < rating) {
+        s.style.color = '#ffd700';
+      }
+    });
+  });
+  
+  star.addEventListener('mouseout', () => {
+    // 恢復原始評分顯示
+    // 這裡可以添加獲取用戶實際評分的邏輯
+  });
+});
+
+// 讀書心得相關函數
+function showAddNoteForm() {
+  // 檢查登入狀態
+  if (!isLoggedIn) {
+    alert('請先登入再撰寫心得');
+    showLoginModal();
+    return;
+  }
+  
+  // 這裡可以添加顯示撰寫心得表單的邏輯
+  alert('開啟撰寫心得表單');
+}
+
+// 相關書籍推薦相關函數
+function loadRelatedBooks() {
+  // 這裡可以添加從服務器獲取相關書籍的邏輯
+  console.log('載入相關書籍推薦');
+}
+
+// 初始化
+document.addEventListener('DOMContentLoaded', () => {
+  // ... existing code ...
+  
+  // 載入相關書籍
+  loadRelatedBooks();
+});
+</script>
+</body>
+</html>

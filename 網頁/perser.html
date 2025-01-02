@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>個人資料</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            transition: background-color 0.3s, color 0.3s; /* 添加過渡效果 */
+        }
+        .header {
+            background-color: #003366;
+            padding: 10px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+        .header .logo {
+            color: white;
+            font-size: 24px;
+            text-decoration: none;
+        }
+        .container {
+            width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+            font-weight: bold;
+        }
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+        .submit-button {
+            padding: 12px 24px;
+            background-color: #003366;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        .submit-button:hover {
+            background-color: #004480;
+        }
+        .error-message {
+            color: #ff3333;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        /* 大頭貼樣式 */
+        .profile-pic {
+            width: 60px; /* 大頭貼的寬度 */
+            height: 60px; /* 大頭貼的高度 */
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #ddd;
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        /* 側邊選單樣式 */
+        .sidebar {
+            position: fixed;
+            left: -250px;
+            top: 0;
+            height: 100%;
+            width: 250px;
+            background-color: #003366;
+            padding-top: 60px;
+            transition: 0.3s;
+            z-index: 1000;
+        }
+        .sidebar.active {
+            left: 0;
+        }
+        .sidebar-menu {
+            list-style: none; /* 移除默认列表样式 */
+            padding: 0;
+            margin: 0;
+        }
+        .sidebar-menu li {
+            padding: 15px 25px;
+            color: white;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .sidebar-menu li:hover {
+            background-color: #004480;
+        }
+        .sidebar-menu i {
+            margin-right: 10px;
+        }
+        .submenu {
+            display: none; /* 默认隐藏子菜单 */
+            padding-left: 20px; /* 子菜单缩进 */
+            list-style: none; /* 移除子菜单的默认列表样式 */
+        }
+        .submenu.active {
+            display: block; /* 显示子菜单 */
+        }
+        .submenu li {
+            display: flex;
+            align-items: center;
+        }
+        .submenu li i {
+            margin-right: 5px; /* 箭头与文本之间的间距 */
+        }
+        .menu-toggle {
+            position: fixed;
+            left: 20px;
+            top: 20px;
+            z-index: 1001;
+            cursor: pointer;
+            color: white;
+            font-size: 24px;
+        }
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+        .overlay.active {
+            display: block;
+        }
+        /* 深色模式樣式 */
+        body.dark-mode {
+            background-color: #121212;
+            color: #ffffff;
+        }
+        body.dark-mode .header {
+            background-color: #1e1e1e;
+        }
+        body.dark-mode .form-group label {
+            color: #ffffff;
+        }
+        body.dark-mode .submit-button {
+            background-color: #1e1e1e;
+            color: #ffffff;
+        }
+        body.dark-mode .submit-button:hover {
+            background-color: #333333;
+        }
+        body.dark-mode .error-message {
+            color: #ff3333;
+        }
+        body.dark-mode .sidebar {
+            background-color: #1e1e1e; /* 深色模式下的側邊選單背景 */
+        }
+        body.dark-mode .sidebar-menu li {
+            color: #ffffff; /* 深色模式下的側邊選單文字顏色 */
+        }
+        body.dark-mode .sidebar-menu li:hover {
+            background-color: #333333; /* 深色模式下的側邊選單懸停顏色 */
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <a href="Home.html" class="logo">主頁</a>
+        </div>
+        <img id="profileImage" class="profile-pic" src="default-profile.png" alt="Profile Picture" />
+    </div>
+
+    <div class="menu-toggle" onclick="toggleSidebar()">
+        <i class="fas fa-bars"></i>
+    </div>
+
+    <div class="overlay" onclick="toggleSidebar()"></div>
+
+    <div class="sidebar">
+        <ul class="sidebar-menu">
+            <li onclick="location.href='Home.html'">
+                <i class="fas fa-home"></i>首頁
+            </li>
+            <li onclick="location.href='perser.html'" class="active">
+                <i class="fas fa-book"></i>個人書庫
+            </li>
+            <li onclick="showBookCategories()">
+                <i class="fas fa-list"></i>書籍分類
+                <ul class="submenu" id="bookCategories">
+                    <li onclick="location.href='category1.html'">
+                        <i class="fas fa-angle-right"></i>文學小說
+                    </li>
+                    <li onclick="location.href='category2.html'">
+                        <i class="fas fa-angle-right"></i>科技資訊
+                    </li>
+                    <li onclick="location.href='category3.html'">
+                        <i class="fas fa-angle-right"></i>藝術設計
+                    </li>
+                    <li onclick="location.href='category4.html'">
+                        <i class="fas fa-angle-right"></i>商業理財
+                    </li>
+                    <li onclick="location.href='category5.html'">
+                        <i class="fas fa-angle-right"></i>心理勵志
+                    </li>
+                </ul>
+            </li>
+            <li onclick="location.href='search.html'">
+                <i class="fas fa-search"></i>進階搜尋
+            </li>
+            <li onclick="location.href='profile.html'">
+                <i class="fas fa-user"></i>個人資料
+            </li>
+
+            <li onclick="toggleTheme()">
+                <i class="fas fa-moon" id="themeIcon"></i>深色模式
+            </li>
+            <li onclick="showHelp()">
+                <i class="fas fa-question-circle"></i>問題與幫助
+            </li>
+        </ul>
+    </div>
+
+    <div class="container">
+        <h1>個人資料</h1>
+        <form id="profileForm" onsubmit="handleProfileUpdate(event)">
+            <div class="form-group">
+                <label for="profilePic">大頭貼</label>
+                <input type="file" id="profilePic" accept="image/*" onchange="previewProfilePic(event)">
+            </div>
+            <div class="form-group">
+                <label for="username">使用者名稱</label>
+                <input type="text" id="username" required>
+                <div class="error-message" id="usernameError"></div>
+            </div>
+            <div class="form-group">
+                <label for="email">電子郵件</label>
+                <input type="email" id="email" required>
+                <div class="error-message" id="emailError"></div>
+            </div>
+            <div class="form-group">
+                <label for="gender">性別</label>
+                <select id="gender" required>
+                    <option value="">請選擇</option>
+                    <option value="male">男</option>
+                    <option value="female">女</option>
+                    <option value="not-disclosed">不公開</option>
+                </select>
+                <div class="error-message" id="genderError"></div>
+            </div>
+            <div class="form-group">
+                <label for="phone">電話號碼</label>
+                <input type="text" id="phone">
+                <div class="error-message" id="phoneError"></div>
+            </div>
+            <button type="submit" class="submit-button">更新資料</button>
+        </form>
+    </div>
+
+    <script>
+        // 假設用戶登入狀態
+        let isLoggedIn = true; // 這裡可以根據實際情況進行修改
+
+        // 檢查用戶是否登入
+        document.addEventListener('DOMContentLoaded', () => {
+            if (!isLoggedIn) {
+                alert('請先登入才能查看和修改個人資料。');
+                showLoginModal();
+            } else {
+                // 如果已登入，載入用戶資料
+                loadUserProfile();
+            }
+        });
+
+        // 載入用戶資料
+        function loadUserProfile() {
+            // 假設從伺服器獲取用戶資料
+            const userProfile = {
+                username: '用戶名稱',
+                email: 'user@example.com',
+                phone: '0912345678',
+                gender: 'male', // 假設的性別
+                profileImage: 'user-profile.png' // 假設的用戶大頭貼
+            };
+
+            document.getElementById('username').value = userProfile.username;
+            document.getElementById('email').value = userProfile.email;
+            document.getElementById('phone').value = userProfile.phone;
+            document.getElementById('profileImage').src = userProfile.profileImage;
+            document.getElementById('gender').value = userProfile.gender; // 設置性別選擇
+        }
+
+        // 預覽大頭貼
+        function previewProfilePic(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('profileImage').src = e.target.result; // 更新顯示的圖片
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // 處理個人資料更新
+        function handleProfileUpdate(event) {
+            event.preventDefault();
+            const username = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
+            const gender = document.getElementById('gender').value;
+            const phone = document.getElementById('phone').value;
+
+            // 驗證用戶輸入
+            if (username.trim() === '') {
+                showError('usernameError', '用戶名不能為空');
+                return;
+            }
+            if (!isValidEmail(email)) {
+                showError('emailError', '請輸入有效的電子郵件地址');
+                return;
+            }
+            if (gender === '') {
+                showError('genderError', '請選擇性別');
+                return;
+            }
+            if (phone && !/^\d{10}$/.test(phone)) {
+                showError('phoneError', '請輸入有效的電話號碼');
+                return;
+            }
+
+            // 模擬更新資料
+            alert('個人資料已更新！');
+            // 這裡可以添加實際的更新邏輯，例如發送請求到伺服器
+        }
+
+        // 驗證電子郵件格式
+        function isValidEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+
+        // 顯示錯誤信息
+        function showError(elementId, message) {
+            const errorElement = document.getElementById(elementId);
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
+        }
+
+        // 登入相關函數
+        function showLoginModal() {
+            // 這裡可以添加顯示登入彈窗的邏輯
+            alert('顯示登入彈窗');
+        }
+
+        // 側邊選單相關函數
+        function toggleSidebar() {
+            const sidebar = document.querySelector('.sidebar');
+            const overlay = document.querySelector('.overlay');
+
+            if (sidebar && overlay) { // 確保元素存在
+                sidebar.classList.toggle('active');
+                overlay.classList.toggle('active');
+            } else {
+                console.error('Sidebar or overlay element not found');
+            }
+        }
+
+        // 切換書籍分類顯示
+        function showBookCategories() {
+            const submenu = document.getElementById('bookCategories');
+            submenu.classList.toggle('active'); // 切換子菜單的顯示
+        }
+
+        // 切換深色模式
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+        }
+    </script>
+</body>
+</html>
