@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>書籍搜索</title>
+<style>
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+.header {
+  background-color: #003366;
+  padding: 10px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.container {
+  width: 1200px;
+  margin: 0 auto;
+}
+.logo {
+  color: white;
+  font-size: 24px;
+  text-decoration: none;
+}
+.search-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px 0;
+}
+.search-container .filter {
+  width: auto;
+  margin-right: 10px;
+}
+.search-container .filter select {
+  width: auto;
+  padding: 10px;
+  font-size: 16px;
+  height: 41px;
+  box-sizing: border-box;
+}
+input[type="text"] {
+  width: 500px;
+  padding: 10px;
+  font-size: 16px;
+}
+button {
+  background-color: #ff6600;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  height: 41px;
+}
+
+.view-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.view-options .filter-group {
+  display: flex;
+  align-items: center;
+}
+
+.view-options .filter-group .filter {
+  margin-right: 10px;
+}
+
+.view-toggle {
+  display: flex;
+  margin: 0;
+  padding: 0;
+}
+
+.view-toggle li {
+  list-style: none;
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+.view-toggle li.active {
+  font-weight: bold;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.grid-item {
+  border: 1px solid #ccc;
+  padding: 10px;
+  text-align: center;
+}
+
+.grid.list-view {
+  display: block;
+}
+
+.grid.list-view .grid-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.grid.list-view .grid-item p {
+  margin: 0 10px;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  list-style: none;
+  padding: 20px 0;
+}
+
+.pagination li {
+  margin: 0 5px;
+}
+
+.pagination a {
+  text-decoration: none;
+  color: #333;
+  padding: 5px 10px;
+  border: 1px solid #ccc;
+console.log('Searching for:', searchTerm);
+console.log('登入資訊:', { username, password, captcha });
+console.log('登入成功！');
+console.log('驗證碼錯誤，請重新輸入');}
+
+.pagination .active a {
+  background-color: #ff6600;
+  color: white;
+}
+
+.search-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.recent-searches {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-top: none;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  z-index: 1000;
+}
+
+.recent-searches div {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.recent-searches div:hover {
+  background-color: #f0f0f0;
+}
+
+/* 側邊選單樣式 */
+.sidebar {
+  position: fixed;
+  left: -250px;
+  top: 0;
+  height: 100%;
+  width: 250px;
+  background-color: #003366;
+  padding-top: 60px;
+  transition: 0.3s;
+  z-index: 1000;
+}
+
+.sidebar.active {
+  left: 0;
+}
+
+.sidebar-menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar-menu li {
+  padding: 15px 25px;
+  color: white;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.sidebar-menu li:hover {
+  background-color: #004480;
+}
+
+.sidebar-menu i {
+  margin-right: 10px;
+}
+
+/* 子選單樣式 */
+.submenu {
+  list-style: none;
+  padding-left: 25px;
+  margin-top: 10px;
+  display: none;
+}
+
+.submenu li {
+  padding: 8px 15px;
+  font-size: 0.9em;
+}
+
+.submenu li:hover {
+  background-color: #004480;
+}
+
+/* 漢堡選單 */
+.menu-toggle {
+  position: fixed;
+  left: 20px;
+  top: 20px;
+  z-index: 1001;
+  cursor: pointer;
+  color: white;
+  font-size: 24px;
+}
+
+.overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+}
+
+.overlay.active {
+  display: block;
+}
+.main-content {
+  margin-left: 0;
+  transition: 0.3s;
+}
+
+.main-content.shifted {
+  margin-left: 250px;
+}
+
+body.dark-mode .sidebar {
+  background-color: #2d2d2d;
+}
+
+body.dark-mode .menu-toggle {
+  color: #ffffff;
+}
+
+/* 深色模式樣式 */
+body.dark-mode {
+  background-color: #1a1a1a;
+  color: #ffffff;
+}
+
+body.dark-mode .grid-item {
+  background-color: #2d2d2d;
+  border-color: #404040;
+}
+
+body.dark-mode .header {
+  background-color: #2d2d2d;
+}
+
+body.dark-mode .sidebar {
+  background-color: #2d2d2d;
+}
+
+body.dark-mode .theme-toggle,
+body.dark-mode .help-button {
+  background-color: #404040;
+}
+
+/*深色模式切換*/
+.theme-toggle {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #003366;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: 0.3s;
+  z-index: 1000;
+}
+
+.help-button {
+  position: fixed;
+  bottom: 70px;
+  right: 20px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #003366;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 1000;
+}
+
+.grid-item {
+  overflow: hidden;
+  border: 1px solid #ccc;
+  padding: 10px;
+  text-align: center;
+}
+
+.grid-item img {
+  transition: transform 0.3s ease;
+  max-width: 100%;
+}
+
+.grid-item img:hover {
+  transform: scale(1.1);
+}
+
+.login-btn {
+  color: white;
+  text-decoration: none;
+  padding: 8px 16px;
+  border: 2px solid white;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  margin-right: 20px;
+}
+
+.login-btn:hover {
+  background-color: white;
+  color: #003366;
+}
+
+body.dark-mode .login-btn {
+  border-color: #ffffff;
+}
+
+body.dark-mode .login-btn:hover {
+  background-color: #ffffff;
+  color: #2d2d2d;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 2000;
+}
+
+.modal-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 300px;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.close {
+  cursor: pointer;
+  font-size: 24px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.login-submit {
+  width: 100%;
+  padding: 10px;
+  background-color: #003366;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.login-submit:hover {
+  background-color: #004480;
+}
+
+body.dark-mode .modal-content {
+  background-color: #2d2d2d;
+  color: white;
+}
+
+body.dark-mode .form-group input {
+  background-color: #1a1a1a;
+  border-color: #404040;
+  color: white;
+}
+
+.register-link {
+  text-align: center;
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid #ddd;
+  font-size: 0.9em;
+}
+
+.register-link a {
+  color: #003366;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.register-link a:hover {
+  text-decoration: underline;
+}
+
+body.dark-mode .register-link {
+  border-top-color: #404040;
+}
+
+body.dark-mode .register-link a {
+  color: #66b3ff;
+}
+
+.forgot-password-link {
+  text-align: center;
+  margin-top: 10px;
+  font-size: 0.9em;
+}
+
+.forgot-password-link a {
+  color: #003366;
+  text-decoration: none;
+}
+
+.forgot-password-link a:hover {
+  text-decoration: underline;
+}
+
+body.dark-mode .forgot-password-link a {
+  color: #66b3ff;
+}
+
+/* 驗證碼樣式 */
+.captcha-container {
+  margin-bottom: 15px;
+}
+
+.captcha-image {
+  width: 150px;
+  height: 50px;
+  margin-bottom: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.captcha-refresh {
+  color: #003366;
+  text-decoration: none;
+  font-size: 0.9em;
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+.captcha-refresh:hover {
+  text-decoration: underline;
+}
+
+body.dark-mode .captcha-image {
+  border-color: #404040;
+}
+
+body.dark-mode .captcha-refresh {
+  color: #66b3ff;
+}
+
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+
+<div class="header">
+  <div class="container">
+    <a href="Home.html" class="logo">主頁</a>
+  </div>
+  <a href="#" class="login-btn" onclick="showLoginModal()">登入</a>
+</div>
+
+<div class="menu-toggle" onclick="toggleSidebar()">
+  <i class="fas fa-bars"></i>
+</div>
+
+<div class="overlay" onclick="toggleSidebar()"></div>
+
+<div class="sidebar">
+  <ul class="sidebar-menu">
+    <li onclick="location.href='Home.html'" class="active">
+      <i class="fas fa-home"></i>首頁
+    </li>
+    <li onclick="location.href='myself.html'">
+      <i class="fas fa-book"></i>個人書庫
+    </li>
+    <li onclick="showBookCategories()">
+      <i class="fas fa-list"></i>書籍分類
+      <ul class="submenu" id="bookCategories">
+        <li><i class="fas fa-angle-right"></i>文學小說</li>
+        <li><i class="fas fa-angle-right"></i>科技資訊</li>
+        <li><i class="fas fa-angle-right"></i>藝術設計</li>
+        <li><i class="fas fa-angle-right"></i>商業理財</li>
+        <li><i class="fas fa-angle-right"></i>心理勵志</li>
+      </ul>
+    </li>
+    <li onclick="location.href='search.html'">
+      <i class="fas fa-search"></i>進階搜尋
+    </li>
+    <li onclick="location.href='perser.html'">
+      <i class="fas fa-user"></i>個人資料
+    </li>
+    <li onclick="toggleTheme()">
+      <i class="fas fa-moon" id="themeIcon"></i>深色模式
+    </li>
+    <li onclick="showHelp()">
+      <i class="fas fa-question-circle"></i>問題與幫助
+    </li>
+  </ul>
+</div>
+
+<div class="main-content">
+  <div class="container">
+    <div class="search-container">
+      <div class="filter">
+        <select id="searchCondition" onchange="updatePlaceholder()">
+          <option value="" disabled selected>選擇條件</option>
+          <option value="title">書名</option>
+          <option value="author">作者</option>
+          <option value="isbn">ISBN</option>
+          <option value="publisher">出版社</option>
+        </select>
+      </div>
+      <div class="search-wrapper">
+        <input type="text" id="searchInput" placeholder="搜索" onfocus="showRecentSearches()" onblur="hideRecentSearches()">
+        <div class="recent-searches" id="recentSearches"></div>
+      </div>
+      <button onclick="performSearch()">搜索</button>
+    </div>
+
+    <div class="view-options">
+      <div class="filter-group">
+        <div class="filter">
+          <select id="itemsPerPage" onchange="changeItemsPerPage()">
+            <option value="24" selected>每頁顯示24個</option>
+            <option value="48">每頁顯示48個</option>
+            <option value="72">每頁顯示72個</option>
+          </select>
+        </div>
+        <div class="filter">
+          <select id="sourceFilter" onchange="filterBySource()">
+            <option value="all" selected>全部</option>
+            <option value="berkeley">柏克萊</option>
+            <option value="newbooks">新書網</option>
+          </select>
+        </div>
+      </div>
+      <ul class="view-toggle">
+        <li class="active" onclick="changeView(this, 'list')"><i class="icon-th-list-1"></i>列表</li>
+        <li onclick="changeView(this, 'grid')"><i class="icon-th-large-1"></i>小圖</li>
+      </ul>
+    </div>
+
+    <div id="book-grid" class="grid">
+    </div>
+
+    <ul class="pagination" id="pagination">
+    </ul>
+  </div>
+</div>
+
+<!-- 登入視窗 -->
+<div id="loginModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>登入</h2>
+      <span class="close" onclick="closeLoginModal()">&times;</span>
+    </div>
+    <form id="loginForm" onsubmit="handleLogin(event)">
+      <div class="form-group">
+        <label for="username">帳號</label>
+        <input type="text" id="username" required>
+      </div>
+      <div class="form-group">
+        <label for="password">密碼</label>
+        <input type="password" id="password" required>
+      </div>
+      <div class="form-group captcha-container">
+        <label for="captcha">驗證碼</label>
+        <div style="display: flex; align-items: center;">
+          <input type="text" id="captcha" required placeholder="不分大小寫" style="width: 120px;">
+          <img src="captcha-placeholder.jpg" alt="驗證碼" class="captcha-image" id="captchaImage">
+          <a class="captcha-refresh" onclick="refreshCaptcha()">
+            <i class="fas fa-sync-alt"></i> 更新驗證碼
+          </a>
+        </div>
+      </div>
+      <button type="submit" class="login-submit">登入</button>
+    </form>
+    <div class="register-link">
+      還沒有帳號？<a href="register.html">立即註冊</a>
+    </div>
+    <div class="forgot-password-link">
+      <a href="forgot-password.html">忘記密碼？</a>
+    </div>
+  </div>
+</div>
+
+<script>
+const booksData = [
+  { 
+    id: 1, 
+    image: 'https://i.imgur.com/yCFAW6y.jpg',
+    title: '貓咪的日常生活',
+    isbn: 'ISBN1234567', 
+    source: '柏克萊', 
+    clicks: 0,
+    author: '貓咪作家',
+    description: '這是一本關於貓咪日常生活的有趣故事集',
+    voters: '1,987 voters'
+  },
+  { 
+    id: 2, 
+    image: 'https://i.imgur.com/yCFAW6y.jpg',
+    title: '貓咪的冒險', 
+    isbn: 'ISBN2345678', 
+    source: '新書網', 
+    clicks: 0,
+    author: '喵星人',
+    description: '一個關於貓咪冒險的精彩故事',
+    voters: '1,987 voters'
+  },
+  { 
+    id: 3, 
+    image: 'https://i.imgur.com/yCFAW6y.jpg',
+    title: '貓咪的美食指南', 
+    isbn: 'ISBN3456789', 
+    source: '柏克萊', 
+    clicks: 0,
+    author: '美食貓',
+    description: '探索貓咪最愛的美食世界',
+    voters: '1,987 voters'
+  },
+  { 
+    id: 4, 
+    image: 'https://i.imgur.com/yCFAW6y.jpg',
+    title: '貓咪的睡眠藝術', 
+    isbn: 'ISBN4567890', 
+    source: '新書網', 
+    clicks: 0,
+    author: '睡神貓',
+    description: '揭秘貓咪的睡眠哲學',
+    voters: '1,987 voters'
+  },
+  { 
+    id: 5, 
+    image: 'https://i.imgur.com/yCFAW6y.jpg',
+    title: '貓咪的觀察日記', 
+    isbn: 'ISBN5678901', 
+    source: '柏克萊', 
+    clicks: 0,
+    author: '觀察家貓',
+    description: '從貓咪的視角觀察這個世界',
+    voters: '1,987 voters'
+  }
+];
+
+let currentPage = 1;
+let itemsPerPage = 24;
+let filteredBooks = [];
+
+function generateGridItems(books) {
+  const grid = document.getElementById('book-grid');
+  grid.innerHTML = '';
+
+  books.forEach(book => {
+    const gridItem = document.createElement('div');
+    gridItem.className = 'grid-item';
+    gridItem.innerHTML = `
+      <p><a href="book.html" target="_blank"><img src="${book.image}" alt="${book.title}" onclick="incrementClicks(${book.id})"></a></p>
+      <p>${book.title}</p>
+      <p>${book.isbn}</p>
+      <p>${book.source}</p>
+    `;
+    grid.appendChild(gridItem);
+  });
+}
+
+function generatePagination(totalItems) {
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+  const pagination = document.getElementById('pagination');
+  pagination.innerHTML = '';
+
+  const prevLi = document.createElement('li');
+  prevLi.innerHTML = `<a href="#" data-page="prev">&laquo;</a>`;
+  pagination.appendChild(prevLi);
+
+  for (let i = 1; i <= totalPages; i++) {
+    const li = document.createElement('li');
+    li.innerHTML = `<a href="#" data-page="${i}">${i}</a>`;
+    if (i === currentPage) {
+      li.classList.add('active');
+    }
+    pagination.appendChild(li);
+  }
+
+  const nextLi = document.createElement('li');
+  nextLi.innerHTML = `<a href="#" data-page="next">&raquo;</a>`;
+  pagination.appendChild(nextLi);
+
+  pagination.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', (event) => {
+      event.preventDefault();
+      const page = link.dataset.page;
+
+      if (page === 'prev') {
+        currentPage = Math.max(1, currentPage - 1);
+      } else if (page === 'next') {
+        currentPage = Math.min(totalPages, currentPage + 1);
+      } else {
+        currentPage = parseInt(page);
+      }
+
+      updateDisplay();
+    });
+  });
+}
+
+function updateDisplay() {
+  sortBooksByClicks();
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const booksToShow = filteredBooks.slice(startIndex, endIndex);
+
+  generateGridItems(booksToShow);
+  generatePagination(filteredBooks.length);
+}
+
+function changeItemsPerPage() {
+  itemsPerPage = parseInt(document.getElementById('itemsPerPage').value);
+  currentPage = 1;
+  updateDisplay();
+}
+
+function changeView(element, viewType) {
+  const viewToggle = document.querySelector('.view-toggle');
+  const grid = document.querySelector('.grid');
+  
+  viewToggle.querySelectorAll('li').forEach(li => li.classList.remove('active'));
+  element.classList.add('active');
+
+  if (viewType === 'list') {
+    grid.classList.add('list-view');
+  } else {
+    grid.classList.remove('list-view');
+  }
+}
+
+function updatePlaceholder() {
+  const searchCondition = document.getElementById('searchCondition');
+  const searchInput = document.getElementById('searchInput');
+  
+  switch(searchCondition.value) {
+    case 'title':
+      searchInput.placeholder = '輸入書名';
+      break;
+    case 'author':
+      searchInput.placeholder = '輸入作者';
+      break;
+    case 'isbn':
+      searchInput.placeholder = '輸入ISBN';
+      break;
+    case 'publisher':
+      searchInput.placeholder = '輸入出版社';
+      break;
+    default:
+      searchInput.placeholder = '搜索';
+  }
+}
+
+function performSearch() {
+  const searchInput = document.getElementById('searchInput');
+  const searchTerm = searchInput.value.trim();
+  
+  if (searchTerm) {
+    addToRecentSearches(searchTerm);
+    console.log('Searching for:', searchTerm);
+    searchInput.value = '';
+  }
+}
+
+function addToRecentSearches(term) {
+  let recentSearches = JSON.parse(localStorage.getItem('recentSearches')) || [];
+  recentSearches = recentSearches.filter(item => item !== term);
+  recentSearches.unshift(term);
+  recentSearches = recentSearches.slice(0, 5);
+  localStorage.setItem('recentSearches', JSON.stringify(recentSearches));
+  displayRecentSearches();
+}
+
+function displayRecentSearches() {
+  const recentSearchesContainer = document.getElementById('recentSearches');
+  const recentSearches = JSON.parse(localStorage.getItem('recentSearches')) || [];
+  
+  recentSearchesContainer.innerHTML = '';
+  recentSearches.forEach(term => {
+    const div = document.createElement('div');
+    div.textContent = term;
+    div.onclick = () => {
+      document.getElementById('searchInput').value = term;
+      hideRecentSearches();
+    };
+    recentSearchesContainer.appendChild(div);
+  });
+}
+
+function showRecentSearches() {
+  const recentSearchesContainer = document.getElementById('recentSearches');
+  recentSearchesContainer.style.display = 'block';
+}
+
+function hideRecentSearches() {
+  setTimeout(() => {
+    const recentSearchesContainer = document.getElementById('recentSearches');
+    recentSearchesContainer.style.display = 'none';
+  }, 200);
+}
+
+function incrementClicks(bookId) {
+  const book = booksData.find(b => b.id === bookId);
+  if (book) {
+    book.clicks++;
+    saveBooksData();
+    sortBooksByClicks();
+    updateDisplay();
+  }
+}
+
+function sortBooksByClicks() {
+  booksData.sort((a, b) => b.clicks - a.clicks);
+}
+
+function saveBooksData() {
+  localStorage.setItem('booksData', JSON.stringify(booksData));
+}
+
+function loadBooksData() {
+  const savedData = localStorage.getItem('booksData');
+  if (savedData) {
+    booksData.length = 0;
+    booksData.push(...JSON.parse(savedData));
+  }
+  filteredBooks = [...booksData];
+}
+
+function filterBySource() {
+  const sourceFilter = document.getElementById('sourceFilter').value;
+  if (sourceFilter === 'all') {
+    filteredBooks = [...booksData];
+  } else {
+    filteredBooks = booksData.filter(book => book.source === sourceFilter);
+  }
+  currentPage = 1;
+  updateDisplay();
+}
+
+function toggleTheme() {
+  document.body.classList.toggle('dark-mode');
+  const themeIcon = document.getElementById('themeIcon');
+  if (document.body.classList.contains('dark-mode')) {
+    themeIcon.classList.remove('fa-moon');
+    themeIcon.classList.add('fa-sun');
+    localStorage.setItem('theme', 'dark');
+  } else {
+    themeIcon.classList.remove('fa-sun');
+    themeIcon.classList.add('fa-moon');
+    localStorage.setItem('theme', 'light');
+  }
+}
+
+function toggleSidebar() {
+  const sidebar = document.querySelector('.sidebar');
+  const overlay = document.querySelector('.overlay');
+  const mainContent = document.querySelector('.main-content');
+  
+  sidebar.classList.toggle('active');
+  overlay.classList.toggle('active');
+  mainContent.classList.toggle('shifted');
+}
+
+function showBookCategories() {
+  const submenu = document.getElementById('bookCategories');
+  submenu.style.display = submenu.style.display === 'block' ? 'none' : 'block';
+}
+
+// 登入相關函數
+function showLoginModal() {
+  document.getElementById('loginModal').style.display = 'block';
+}
+
+function closeLoginModal() {
+  document.getElementById('loginModal').style.display = 'none';
+}
+
+function handleLogin(event) {
+  event.preventDefault();
+  const username = document.getElementById('username').value;
+  const password = document.getElementById('password').value;
+  const captcha = document.getElementById('captcha').value;
+  
+  // 添加驗證碼驗證邏輯
+  if (!validateCaptcha(captcha)) {
+    alert('驗證碼錯誤，請重新輸入');
+    refreshCaptcha();
+    document.getElementById('captcha').value = '';
+    return;
+  }
+  
+  // 添加實際的登入邏輯
+  console.log('登入資訊:', { username, password, captcha });
+  
+  
+  alert('登入成功！');
+  closeLoginModal();
+  
+  
+  event.target.reset();
+}
+
+function validateCaptcha(captcha) {
+  // 驗證碼驗證邏輯
+  return captcha.length > 0;
+}
+
+// 點擊彈窗外部關閉彈窗
+window.onclick = function(event) {
+  const modal = document.getElementById('loginModal');
+  if (event.target === modal) {
+    closeLoginModal();
+  }
+}
+
+// 驗證碼相關函數
+function refreshCaptcha() {
+  const captchaImage = document.getElementById('captchaImage');
+  // 從後端獲取新的驗證碼圖片
+  captchaImage.src = 'captcha-placeholder.jpg?' + new Date().getTime();
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  loadBooksData();
+  updateDisplay();
+  updatePlaceholder();
+  displayRecentSearches();
+  
+  const savedTheme = localStorage.getItem('theme');
+  if (savedTheme === 'dark') {
+    document.body.classList.add('dark-mode');
+    const themeIcon = document.getElementById('themeIcon');
+    themeIcon.classList.remove('fa-moon');
+    themeIcon.classList.add('fa-sun');
+  }
+
+  //  ESC 鍵關閉
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      const sidebar = document.querySelector('.sidebar');
+      const overlay = document.querySelector('.overlay');
+      const mainContent = document.querySelector('.main-content');
+      
+      sidebar.classList.remove('active');
+      overlay.classList.remove('active');
+      mainContent.classList.remove('shifted');
+    }
+  });
+
+  // 初始化驗證碼
+  refreshCaptcha();
+});
+</script>
+
+</body>
+</html>

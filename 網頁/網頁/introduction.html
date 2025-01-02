@@ -1,0 +1,235 @@
+ <!DOCTYPE html>
+<html>
+<head>
+    <title>系統介紹</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* 側邊欄樣式 */
+        .sidebar {
+            width: 250px;
+            background-color: #003366;
+            color: white;
+            padding: 20px;
+        }
+
+        .sidebar h2 {
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sidebar li {
+            margin-bottom: 10px;
+        }
+
+        .sidebar a {
+            color: white;
+            text-decoration: none;
+            display: block;
+            padding: 10px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        .sidebar a:hover {
+            background-color: #004480;
+        }
+
+        .sidebar a.active {
+            background-color: #004480;
+        }
+
+        /* 主要內容區域樣式 */
+        .main-content {
+            flex: 1;
+            padding: 40px;
+        }
+
+        .section {
+            background-color: white;
+            border-radius: 8px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .section h2 {
+            color: #003366;
+            margin-top: 0;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #003366;
+            padding-bottom: 10px;
+        }
+
+        .section h3 {
+            color: #004480;
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .feature-list li {
+            margin-bottom: 15px;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .feature-list li:before {
+            content: "•";
+            color: #003366;
+            font-size: 20px;
+            position: absolute;
+            left: 0;
+        }
+
+        .api-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .api-table th, .api-table td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+
+        .api-table th {
+            background-color: #f5f5f5;
+            color: #003366;
+        }
+
+        .api-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        /* 深色模式樣式 */
+        body.dark-mode {
+            background-color: #1a1a1a;
+            color: #ffffff;
+        }
+
+        body.dark-mode .section {
+            background-color: #2d2d2d;
+        }
+
+        body.dark-mode .section h2 {
+            color: #66b3ff;
+            border-bottom-color: #66b3ff;
+        }
+
+        body.dark-mode .section h3 {
+            color: #99ccff;
+        }
+
+        body.dark-mode .api-table th {
+            background-color: #404040;
+            color: #ffffff;
+        }
+
+        body.dark-mode .api-table td {
+            border-color: #404040;
+        }
+
+        body.dark-mode .api-table tr:nth-child(even) {
+            background-color: #333333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 引入側邊欄 -->
+        <div class="sidebar">
+            <h2>導航菜單</h2>
+            <ul>
+                <li><a href="Home.html">首頁</a></li>
+                <li><a href="myself.html">個人書庫</a></li>
+                <li><a href="book.html">書籍分類</a></li>
+                <li><a href="search.html">進階搜尋</a></li>
+                <li><a href="introduction.html" class="active">系統介紹</a></li>
+            </ul>
+        </div>
+
+        <!-- 主要內容區域 -->
+        <div class="main-content">
+            <!-- 個人書庫介紹部分 -->
+            <div class="section">
+                <h2>個人書庫介紹</h2>
+                <ul class="feature-list">
+                    <li>個人化的書籍收藏空間，方便管理您的閱讀清單</li>
+                    <li>支援書籍分類和標籤功能，輕鬆整理您的藏書</li>
+                    <li>閱讀進度追蹤，記錄您的閱讀歷程</li>
+                    <li>個人閱讀筆記和心得分享功能</li>
+                    <li>書籍推薦系統，基於您的閱讀喜好推薦相關書籍</li>
+                </ul>
+            </div>
+
+            <!-- API介紹部分 -->
+            <div class="section">
+                <h2>API 說明</h2>
+                <h3>使用的外部 API</h3>
+                <table class="api-table">
+                    <tr>
+                        <th>API名稱</th>
+                        <th>用途</th>
+                        <th>說明</th>
+                    </tr>
+                    <tr>
+                        <td>Google Books API</td>
+                        <td>書籍資訊查詢</td>
+                        <td>用於獲取書籍詳細信息，包括標題、作者、出版信息等</td>
+                    </tr>
+                    <tr>
+                        <td>OpenLibrary API</td>
+                        <td>書籍封面圖片</td>
+                        <td>提供書籍封面圖片和預覽功能</td>
+                    </tr>
+                    <tr>
+                        <td>GoodReads API</td>
+                        <td>書評和評分</td>
+                        <td>獲取書籍評論和評分信息</td>
+                    </tr>
+                </table>
+
+                <h3>系統功能</h3>
+                <ul class="feature-list">
+                    <li>使用者註冊和登入系統</li>
+                    <li>個人書庫管理功能</li>
+                    <li>書籍搜尋和分類功能</li>
+                    <li>閱讀進度追蹤系統</li>
+                    <li>個人化推薦系統</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 檢查並應用深色模式
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-mode');
+            }
+        });
+    </script>
+</body>
+</html> 
