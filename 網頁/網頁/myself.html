@@ -544,7 +544,7 @@ body.dark-mode .note-badge {
     <li onclick="location.href='search.html'">
       <i class="fas fa-search"></i>進階搜尋
     </li>
-    <li onclick="location.href='search.html'">
+    <li onclick="location.href='perser.html'">
       <i class="fas fa-user"></i>個人資料
     </li>
     <li onclick="toggleTheme()">
@@ -561,13 +561,9 @@ body.dark-mode .note-badge {
     <h1>我的書籍收藏</h1>
     
     <!-- 分類標籤 -->
-    <div class="category-tags">
-      <span class="category-tag active">全部</span>
-      <span class="category-tag">文學小說</span>
-      <span class="category-tag">科技資訊</span>
-      <span class="category-tag">藝術設計</span>
-      <span class="category-tag">商業理財</span>
-      <span class="category-tag">心理勵志</span>
+    <div class="category-tags" id="categoryTags">
+      <span class="category-tag active" data-category="all">全部</span>
+      <!-- 其他分類標籤將由 JavaScript 動態生成 -->
     </div>
 
     <!-- 工具列 -->
@@ -859,6 +855,101 @@ function filterBooksByCategory(category) {
     book.style.display = shouldShow ? 'block' : 'none';
   });
 }
+
+// 從資料庫獲取分類並生成標籤
+async function loadCategories() {
+    try {
+        // 這裡替換為實際的資料庫 API 調用
+        const response = await fetch('/api/categories');
+        const categories = await response.json();
+        
+        const categoryTags = document.getElementById('categoryTags');
+        
+        // 為每個分類創建標籤
+        categories.forEach(category => {
+            const tagSpan = document.createElement('span');
+            tagSpan.className = 'category-tag';
+            tagSpan.setAttribute('data-category', category.id);
+            tagSpan.textContent = category.name;
+            
+            // 添加點擊事件
+            tagSpan.addEventListener('click', function() {
+                // 移除其他標籤的 active 類
+                document.querySelectorAll('.category-tag').forEach(tag => {
+                    tag.classList.remove('active');
+                });
+                // 添加當前標籤的 active 類
+                this.classList.add('active');
+                
+                // 根據選擇的分類過濾書籍
+                filterBooksByCategory(category.id);
+            });
+            
+            categoryTags.appendChild(tagSpan);
+        });
+    } catch (error) {
+        console.error('載入分類失敗:', error);
+    }
+}
+
+// 根據分類過濾書籍
+async function filterBooksByCategory(categoryId) {
+    try {
+        if (categoryId === 'all') {
+            // 顯示所有書籍
+            loadAllBooks();
+            return;
+        }
+        
+        // 這裡替換為實際的資料庫 API 調用
+        const response = await fetch(`/api/books?category=${categoryId}`);
+        const books = await response.json();
+        
+        // 更新書籍顯示
+        displayBooks(books);
+    } catch (error) {
+        console.error('過濾書籍失敗:', error);
+    }
+}
+
+// 顯示書籍列表
+function displayBooks(books) {
+    const booksContainer = document.querySelector('.books-container'); // 確保有這個容器
+    booksContainer.innerHTML = ''; // 清空現有內容
+    
+    books.forEach(book => {
+        const bookElement = createBookElement(book);
+        booksContainer.appendChild(bookElement);
+    });
+}
+
+// 創建書籍元素
+function createBookElement(book) {
+    const bookDiv = document.createElement('div');
+    bookDiv.className = 'book-item';
+    
+    bookDiv.innerHTML = `
+        <img src="${book.coverImage}" alt="${book.title}" class="book-cover">
+        <div class="book-info">
+            <h3 class="book-title">${book.title}</h3>
+            <p class="book-author">${book.author}</p>
+            <p class="book-category">${book.category}</p>
+        </div>
+    `;
+    
+    return bookDiv;
+}
+
+// 初始化
+document.addEventListener('DOMContentLoaded', () => {
+    // 載入分類
+    loadCategories();
+    
+    // 初始載入所有書籍
+    filterBooksByCategory('all');
+    
+    // ... 其他初始化代碼 ...
+});
 </script>
 </body>
 </html>

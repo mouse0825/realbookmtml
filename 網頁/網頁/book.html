@@ -1039,6 +1039,29 @@ document.addEventListener('DOMContentLoaded', () => {
   // 載入相關書籍
   loadRelatedBooks();
 });
+
+// 分類相關函數
+function toggleCategories(element) {
+    const submenu = element.querySelector('.submenu');
+    if (submenu) {
+        submenu.classList.toggle('active');
+    }
+}
+
+function toggleSubCategory(element, event) {
+    event.stopPropagation(); // 防止事件冒泡
+    element.classList.toggle('active');
+    const subcategory = element.nextElementSibling;
+    if (subcategory && subcategory.classList.contains('subcategory')) {
+        subcategory.classList.toggle('active');
+    }
+}
+
+function selectCategory(category) {
+    console.log('選擇分類:', category);
+    // 這裡可以添加實際的分類選擇邏輯
+    // 例如跳轉到對應的分類頁面或過濾當前頁面的內容
+}
 </script>
 </body>
 </html>

@@ -10,7 +10,6 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            transition: background-color 0.3s, color 0.3s; /* 添加過渡效果 */
         }
         .header {
             background-color: #003366;
@@ -18,17 +17,15 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            position: relative;
-        }
-        .header .logo {
-            color: white;
-            font-size: 24px;
-            text-decoration: none;
         }
         .container {
             width: 1200px;
             margin: 0 auto;
-            padding: 20px;
+        }
+        .logo {
+            color: white;
+            font-size: 24px;
+            text-decoration: none;
         }
         .form-group {
             margin-bottom: 20px;
@@ -177,6 +174,123 @@
         body.dark-mode .sidebar-menu li:hover {
             background-color: #333333; /* 深色模式下的側邊選單懸停顏色 */
         }
+        /* 登入按鈕樣式 */
+        .login-btn {
+            color: white;
+            text-decoration: none;
+            padding: 8px 16px;
+            border: 2px solid white;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            margin-right: 20px;
+        }
+
+        .login-btn:hover {
+            background-color: white;
+            color: #003366;
+        }
+
+        body.dark-mode .login-btn {
+            border-color: #ffffff;
+        }
+
+        body.dark-mode .login-btn:hover {
+            background-color: #ffffff;
+            color: #2d2d2d;
+        }
+
+        /* 登入彈窗樣式 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            width: 300px;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .close {
+            cursor: pointer;
+            font-size: 24px;
+        }
+
+        body.dark-mode .modal-content {
+            background-color: #2d2d2d;
+            color: white;
+        }
+
+        body.dark-mode .form-group input {
+            background-color: #1a1a1a;
+            border-color: #404040;
+            color: white;
+        }
+
+        /* 註冊連結樣式 */
+        .register-link {
+            text-align: center;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #ddd;
+            font-size: 0.9em;
+        }
+
+        .register-link a {
+            color: #003366;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+
+        body.dark-mode .register-link {
+            border-top-color: #404040;
+        }
+
+        body.dark-mode .register-link a {
+            color: #66b3ff;
+        }
+
+        /* 找回密碼連結樣式 */
+        .forgot-password-link {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 0.9em;
+        }
+
+        .forgot-password-link a {
+            color: #003366;
+            text-decoration: none;
+        }
+
+        .forgot-password-link a:hover {
+            text-decoration: underline;
+        }
+
+        body.dark-mode .forgot-password-link a {
+            color: #66b3ff;
+        }
     </style>
 </head>
 <body>
@@ -184,7 +298,7 @@
         <div class="container">
             <a href="Home.html" class="logo">主頁</a>
         </div>
-        <img id="profileImage" class="profile-pic" src="default-profile.png" alt="Profile Picture" />
+        <a href="#" class="login-btn" onclick="showLoginModal()">登入</a>
     </div>
 
     <div class="menu-toggle" onclick="toggleSidebar()">
@@ -201,23 +315,38 @@
             <li onclick="location.href='myself.html'" class="active">
                 <i class="fas fa-book"></i>個人書庫
             </li>
-            <li onclick="showBookCategories()">
+            <li onclick="toggleCategories(this)">
                 <i class="fas fa-list"></i>書籍分類
                 <ul class="submenu" id="bookCategories">
-                    <li onclick="location.href='category1.html'">
-                        <i class="fas fa-angle-right"></i>文學小說
-                    </li>
-                    <li onclick="location.href='category2.html'">
-                        <i class="fas fa-angle-right"></i>科技資訊
-                    </li>
-                    <li onclick="location.href='category3.html'">
-                        <i class="fas fa-angle-right"></i>藝術設計
-                    </li>
-                    <li onclick="location.href='category4.html'">
-                        <i class="fas fa-angle-right"></i>商業理財
-                    </li>
-                    <li onclick="location.href='category5.html'">
-                        <i class="fas fa-angle-right"></i>心理勵志
+                    <li>
+                        <div class="category-item" onclick="toggleSubCategory(this, event)">
+                            <i class="fas fa-angle-right"></i>電腦資訊
+                        </div>
+                        <ul class="subcategory">
+                            <li>
+                                <div class="category-item" onclick="toggleSubCategory(this, event)">
+                                    <i class="fas fa-angle-right"></i>認證檢定
+                                </div>
+                                <ul class="subcategory">
+                                    <li onclick="selectCategory('其他認證檢定')">
+                                        <div class="category-item">其他認證檢定</div>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <div class="category-item" onclick="toggleSubCategory(this, event)">
+                                    <i class="fas fa-angle-right"></i>程式設計
+                                </div>
+                                <ul class="subcategory">
+                                    <li onclick="selectCategory('程式邏輯')">
+                                        <div class="category-item">程式邏輯</div>
+                                    </li>
+                                    <li onclick="selectCategory('python')">
+                                        <div class="category-item">Python</div>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
                     </li>
                 </ul>
             </li>
@@ -240,10 +369,10 @@
     <div class="container">
         <h1>個人資料</h1>
         <form id="profileForm" onsubmit="handleProfileUpdate(event)">
-            <div class="form-group">
+            <!-- <div class="form-group">
                 <label for="profilePic">大頭貼</label>
                 <input type="file" id="profilePic" accept="image/*" onchange="previewProfilePic(event)">
-            </div>
+            </div> -->
             <div class="form-group">
                 <label for="username">使用者名稱</label>
                 <input type="text" id="username" required>
@@ -254,7 +383,7 @@
                 <input type="email" id="email" required>
                 <div class="error-message" id="emailError"></div>
             </div>
-            <div class="form-group">
+           <!-- <div class="form-group">
                 <label for="gender">性別</label>
                 <select id="gender" required>
                     <option value="">請選擇</option>
@@ -263,7 +392,7 @@
                     <option value="not-disclosed">不公開</option>
                 </select>
                 <div class="error-message" id="genderError"></div>
-            </div>
+            </div>-->
             <div class="form-group">
                 <label for="phone">電話號碼</label>
                 <input type="text" id="phone">
@@ -271,6 +400,33 @@
             </div>
             <button type="submit" class="submit-button">更新資料</button>
         </form>
+    </div>
+
+    <!-- 登入彈窗 -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>登入</h2>
+                <span class="close" onclick="closeLoginModal()">&times;</span>
+            </div>
+            <form id="loginForm" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label for="username">帳號</label>
+                    <input type="text" id="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">密碼</label>
+                    <input type="password" id="password" required>
+                </div>
+                <button type="submit" class="login-submit">登入</button>
+            </form>
+            <div class="register-link">
+                還沒有帳號？<a href="register.html">立即註冊</a>
+            </div>
+            <div class="forgot-password-link">
+                <a href="forgot-password.html">忘記密碼？</a>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -364,8 +520,35 @@
 
         // 登入相關函數
         function showLoginModal() {
-            // 這裡可以添加顯示登入彈窗的邏輯
-            alert('顯示登入彈窗');
+            document.getElementById('loginModal').style.display = 'block';
+        }
+
+        function closeLoginModal() {
+            document.getElementById('loginModal').style.display = 'none';
+        }
+
+        function handleLogin(event) {
+            event.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            // 這裡可以添加實際的登入邏輯
+            console.log('登入資訊:', { username, password });
+            
+            // 模擬登入成功
+            alert('登入成功！');
+            closeLoginModal();
+            
+            // 清空表單
+            event.target.reset();
+        }
+
+        // 點擊彈窗外部關閉彈窗
+        window.onclick = function(event) {
+            const modal = document.getElementById('loginModal');
+            if (event.target === modal) {
+                closeLoginModal();
+            }
         }
 
         // 側邊選單相關函數

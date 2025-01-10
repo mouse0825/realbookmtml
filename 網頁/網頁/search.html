@@ -528,14 +528,39 @@ body.dark-mode .menu-toggle {
         <li onclick="location.href='myself.html'">
             <i class="fas fa-book"></i>個人書庫
         </li>
-        <li onclick="showBookCategories()">
+        <li onclick="toggleCategories(this)">
             <i class="fas fa-list"></i>書籍分類
             <ul class="submenu" id="bookCategories">
-                <li><i class="fas fa-angle-right"></i>文學小說</li>
-                <li><i class="fas fa-angle-right"></i>科技資訊</li>
-                <li><i class="fas fa-angle-right"></i>藝術設計</li>
-                <li><i class="fas fa-angle-right"></i>商業理財</li>
-                <li><i class="fas fa-angle-right"></i>心理勵志</li>
+                <li>
+                    <div class="category-item" onclick="toggleSubCategory(this, event)">
+                        <i class="fas fa-angle-right"></i>電腦資訊
+                    </div>
+                    <ul class="subcategory">
+                        <li>
+                            <div class="category-item" onclick="toggleSubCategory(this, event)">
+                                <i class="fas fa-angle-right"></i>認證檢定
+                            </div>
+                            <ul class="subcategory">
+                                <li onclick="selectCategory('其他認證檢定')">
+                                    <div class="category-item">其他認證檢定</div>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <div class="category-item" onclick="toggleSubCategory(this, event)">
+                                <i class="fas fa-angle-right"></i>程式設計
+                            </div>
+                            <ul class="subcategory">
+                                <li onclick="selectCategory('程式邏輯')">
+                                    <div class="category-item">程式邏輯</div>
+                                </li>
+                                <li onclick="selectCategory('python')">
+                                    <div class="category-item">Python</div>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
             </ul>
         </li>
         <li onclick="location.href='search.html'" class="active">
