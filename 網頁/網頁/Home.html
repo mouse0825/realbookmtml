@@ -131,7 +131,10 @@ button {
   color: #333;
   padding: 5px 10px;
   border: 1px solid #ccc;
-}
+console.log('Searching for:', searchTerm);
+console.log('登入資訊:', { username, password, captcha });
+console.log('登入成功！');
+console.log('驗證碼錯誤，請重新輸入');}
 
 .pagination .active a {
   background-color: #ff6600;
@@ -514,98 +517,6 @@ body.dark-mode .captcha-refresh {
   color: #66b3ff;
 }
 
-/* 多層級分類樣式 */
-.subcategory {
-    display: none;
-    list-style: none;
-    padding-left: 20px;
-    margin: 0;
-}
-
-.category-item {
-    display: flex;
-    align-items: center;
-    padding: 8px 0;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.category-item:hover {
-    color: #66b3ff;
-}
-
-.category-item i {
-    margin-right: 8px;
-    transition: transform 0.3s;
-}
-
-.category-item.active > i {
-    transform: rotate(90deg);
-}
-
-.subcategory.active {
-    display: block;
-}
-
-body.dark-mode .category-item:hover {
-    color: #66b3ff;
-}
-
-/* 側邊選單樣式 */
-.sidebar {
-    position: fixed;
-    left: -250px;
-    top: 0;
-    height: 100%;
-    width: 250px;
-    background-color: #003366;
-    padding-top: 60px;
-    transition: 0.3s;
-    z-index: 1000;
-}
-
-.sidebar.active {
-    left: 0;
-}
-
-.sidebar-menu {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.sidebar-menu li {
-    padding: 15px 25px;
-    color: white;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.sidebar-menu li:hover {
-    background-color: #004480;
-}
-
-.sidebar-menu i {
-    margin-right: 10px;
-}
-
-/* 子選單樣式 */
-.submenu {
-    list-style: none;
-    padding-left: 25px;
-    margin-top: 10px;
-    display: none;
-}
-
-.submenu li {
-    padding: 8px 15px;
-    font-size: 0.9em;
-}
-
-.submenu li:hover {
-    background-color: #004480;
-}
-
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
@@ -632,41 +543,16 @@ body.dark-mode .category-item:hover {
     <li onclick="location.href='myself.html'">
       <i class="fas fa-book"></i>個人書庫
     </li>
-    <li onclick="toggleCategories(this)">
+    <!--<li onclick="showBookCategories()">
       <i class="fas fa-list"></i>書籍分類
       <ul class="submenu" id="bookCategories">
-        <li>
-          <div class="category-item" onclick="toggleSubCategory(this, event)">
-            <i class="fas fa-angle-right"></i>電腦資訊
-          </div>
-          <ul class="subcategory">
-            <li>
-              <div class="category-item" onclick="toggleSubCategory(this, event)">
-                <i class="fas fa-angle-right"></i>認證檢定
-              </div>
-              <ul class="subcategory">
-                <li onclick="selectCategory('其他認證檢定')">
-                  <div class="category-item">其他認證檢定</div>
-                </li>
-              </ul>
-            </li>
-            <li>
-              <div class="category-item" onclick="toggleSubCategory(this, event)">
-                <i class="fas fa-angle-right"></i>程式設計
-              </div>
-              <ul class="subcategory">
-                <li onclick="selectCategory('程式邏輯')">
-                  <div class="category-item">程式邏輯</div>
-                </li>
-                <li onclick="selectCategory('python')">
-                  <div class="category-item">Python</div>
-                </li>
-              </ul>
-            </li>
-          </ul>
-        </li>
+        <li><i class="fas fa-angle-right"></i>文學小說</li>
+        <li><i class="fas fa-angle-right"></i>科技資訊</li>
+        <li><i class="fas fa-angle-right"></i>藝術設計</li>
+        <li><i class="fas fa-angle-right"></i>商業理財</li>
+        <li><i class="fas fa-angle-right"></i>心理勵志</li>
       </ul>
-    </li>
+    </li>-->
     <li onclick="location.href='search.html'">
       <i class="fas fa-search"></i>進階搜尋
     </li>
@@ -1108,29 +994,6 @@ function refreshCaptcha() {
   const captchaImage = document.getElementById('captchaImage');
   // 從後端獲取新的驗證碼圖片
   captchaImage.src = 'captcha-placeholder.jpg?' + new Date().getTime();
-}
-
-// 分類相關函數
-function toggleCategories(element) {
-    const submenu = element.querySelector('.submenu');
-    if (submenu) {
-        submenu.classList.toggle('active');
-    }
-}
-
-function toggleSubCategory(element, event) {
-    event.stopPropagation(); // 防止事件冒泡
-    element.classList.toggle('active');
-    const subcategory = element.nextElementSibling;
-    if (subcategory && subcategory.classList.contains('subcategory')) {
-        subcategory.classList.toggle('active');
-    }
-}
-
-function selectCategory(category) {
-    console.log('選擇分類:', category);
-    // 這裡可以添加實際的分類選擇邏輯
-    // 例如跳轉到對應的分類頁面或過濾當前頁面的內容
 }
 
 document.addEventListener('DOMContentLoaded', () => {
